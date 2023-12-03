@@ -40,6 +40,8 @@ private slots:
     QString getHostIp(const QString &hostname);
     void checkPingStatus();
     void refreshPing();
+    void writeVectorToFile(const QVector<MainWindow::Ping> &pingData, const QString &fileName);
+    void readFileToVector(const QString &fileName);
 
 private:
     Ui::MainWindow *ui;

@@ -8,6 +8,8 @@
 #include <QNetworkRequest>
 #include <QThread>
 #include <QTimer>
+#include <QFile>
+#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableWidget->setShowGrid(false);
+
+    MainWindow::readFileToVector("data.txt");
 
     // Declare timer as a member variable of MainWindow
     QTimer* timer = new QTimer(this);
@@ -95,6 +99,9 @@ void MainWindow::on_addBtn_clicked()
         pingId = pingId + 1;
 
         MainWindow::updateTable();
+
+        // Save to file
+        MainWindow::writeVectorToFile(pingData, "data.txt");
     } else {
         qDebug() << "Ping Error:" << result.status;
     }
@@ -106,10 +113,19 @@ void MainWindow::updateTable()
 
     for (int i = 0; i < pingData.count(); ++i) {
         ui->tableWidget->setItem(i, 0, new QTableWidgetItem(QString::number(pingData[i].id)));
+        ui->tableWidget->item(i, 0)->setTextAlignment(Qt::AlignCenter);
+
         ui->tableWidget->setItem(i, 1, new QTableWidgetItem(pingData[i].host));
+        ui->tableWidget->item(i, 1)->setTextAlignment(Qt::AlignCenter);
+
         ui->tableWidget->setItem(i, 2, new QTableWidgetItem(pingData[i].ip));
+        ui->tableWidget->item(i, 2)->setTextAlignment(Qt::AlignCenter);
+
         ui->tableWidget->setItem(i, 3, new QTableWidgetItem(pingData[i].time));
+        ui->tableWidget->item(i, 3)->setTextAlignment(Qt::AlignCenter);
+
         ui->tableWidget->setItem(i, 4, new QTableWidgetItem(pingData[i].status));
+        ui->tableWidget->item(i, 4)->setTextAlignment(Qt::AlignCenter);
     }
 }
 
@@ -143,4 +159,80 @@ void MainWindow::checkPingStatus(){
 void MainWindow::refreshPing(){
     qDebug() << "refreshPing";
     MainWindow::checkPingStatus();
+}
+
+void MainWindow::writeVectorToFile(const QVector<MainWindow::Ping> &pingData, const QString &fileName) {
+    // Get the current application directory path
+    QString currentPath = QCoreApplication::applicationDirPath();
+
+    // Combine the current path with the file name
+    QString filePath = currentPath + QDir::separator() + fileName;
+
+    QFile file(filePath);
+
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {  // Open the file in text mode
+        QTextStream out(&file);
+
+        // Write each struct in the QVector to the file
+        for (const MainWindow::Ping &ping : pingData) {
+            out << ping.id << ","
+            << ping.host << ","
+            << ping.ip << ","
+            << ping.time << ","
+            << ping.status << "\n";
+
+            if (out.status() != QTextStream::Ok) {
+                qDebug() << "Error writing to file.";
+                file.close();  // Close the file on error
+                return;
+            }
+        }
+
+        // Ensure data is written to the file before closing
+        file.close();
+        qDebug() << "Saved file:" << filePath;
+    } else {
+        qDebug() << "Failed to open file for writing:" << filePath;
+    }
+}
+
+void MainWindow::readFileToVector(const QString &fileName) {
+    // Get the current application directory path
+    QString currentPath = QCoreApplication::applicationDirPath();
+
+    // Combine the current path with the file name
+    QString filePath = currentPath + QDir::separator() + fileName;
+
+    QFile file(filePath);
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {  // Open the file in text mode
+        QTextStream in(&file);
+
+        // Read each line from the file and populate the QVector
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            QStringList fields = line.split(",");
+
+            if (fields.size() == 5) {  // Ensure the correct number of fields
+                MainWindow::Ping ping;
+                ping.id = fields[0].toInt();
+                ping.host = fields[1];
+                ping.ip = fields[2];
+                ping.time = fields[3];
+                ping.status = fields[4];
+
+                pingData.append(ping);
+
+                MainWindow::updateTable();
+            } else {
+                qDebug() << "Error reading line from file: " << line;
+            }
+        }
+
+        // Ensure the file is closed after reading
+        file.close();
+        qDebug() << "Read file:" << filePath;
+    } else {
+        qDebug() << "Failed to open file for reading:" << filePath;
+    }
 }

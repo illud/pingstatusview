@@ -1,1 +1,1 @@
-# pingstatusview
+#Ping Status ViewPing Status Viewis a app built with  [QT C++](https://www.qt.io) that allows you to track the time of HOST responses.![main](./in_app_img/1.png)

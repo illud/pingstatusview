@@ -31,7 +31,7 @@
 font: 900 9pt &quot;Arial Black&quot;;
 color: rgb(255, 255, 255);
 border-bottom-width: 1px;
-border-color: none none gray none;</string>
+border-color: none none rgb(41, 98, 255) none;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="addBtn">
@@ -47,27 +47,28 @@ border-color: none none gray none;</string>
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton#addBtn { 
-    background-color: rgb(41, 98, 255);
-	font: 900 9pt &quot;Arial Black&quot;;
-	color: rgb(255, 255, 255);
+     <string notr="true">QPushButton#addBtn {
+    font: 900 9pt &quot;Arial Black&quot;;
+    color: rgb(255, 255, 255);
     border: 0px;
+    border-bottom: 2px solid rgb(41, 98, 255);
 }
 
-QPushButton#addBtn:hover{ 
+QPushButton#addBtn:hover {
     background-color: rgb(33, 78, 203);
-	font: 900 9pt &quot;Arial Black&quot;;
-	color: rgb(255, 255, 255);
+    font: 900 9pt &quot;Arial Black&quot;;
+    color: rgb(255, 255, 255);
     border: 0px;
+    border-bottom: 2px solid rgb(41, 98, 255);
 }
 
-QPushButton#addBtn::focus:pressed{ 
-	background-color: rgb(38, 72, 184);
-	font: 900 9pt &quot;Arial Black&quot;;
-	color: rgb(255, 255, 255);
+QPushButton#addBtn::focus:pressed {
+    background-color: rgb(38, 72, 184);
+    font: 900 9pt &quot;Arial Black&quot;;
+    color: rgb(255, 255, 255);
     border: 0px;
-}
-</string>
+    border-bottom: 2px solid rgb(41, 98, 255);
+}</string>
     </property>
     <property name="text">
      <string>Add</string>
@@ -81,6 +82,9 @@ QPushButton#addBtn::focus:pressed{
       <width>1211</width>
       <height>561</height>
      </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
      <string notr="true">  QTableWidget {
@@ -205,29 +209,65 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal
 }
 </string>
     </property>
+    <property name="verticalScrollMode">
+     <enum>QAbstractItemView::ScrollPerPixel</enum>
+    </property>
+    <property name="horizontalScrollMode">
+     <enum>QAbstractItemView::ScrollPerPixel</enum>
+    </property>
     <column>
      <property name="text">
       <string>ID</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+       <bold>true</bold>
+      </font>
      </property>
     </column>
     <column>
      <property name="text">
       <string>HOST</string>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
     </column>
     <column>
      <property name="text">
       <string>IP</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+       <bold>true</bold>
+      </font>
      </property>
     </column>
     <column>
      <property name="text">
       <string>TIME</string>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
     </column>
     <column>
      <property name="text">
       <string>STATUS</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+       <bold>true</bold>
+      </font>
      </property>
     </column>
    </widget>
